@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import Home from "./Components/Home";
+import { React, useEffect } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Register from "./Components/Register";
+import Login from "./Components/Login";
+import Secret from "./Components/Secret";
+import { connect } from "react-redux";
+import { loadUser } from "./actions/auth";
+import setAuthToken from "./utils/setAuthToken";
+import PrivateRoute from "./Components/Utility/PrivateRoute";
+import store from "./store";
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+    store.dispatch(loadUser());
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={Login} />
+        <PrivateRoute exact path="/secret" component={Secret} />
+      </Switch>
+    </Router>
   );
-}
-
+};
 export default App;
